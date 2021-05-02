@@ -1,5 +1,6 @@
 import express from "express";
 import { send } from "node:process";
+import "./create-database";
 import {router as login_router } from "./routes/login_routes";
 const app = express();
 const port = process.env.port || 3000;
