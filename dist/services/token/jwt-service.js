@@ -13,9 +13,23 @@ var JWTService = /** @class */ (function () {
         // TODO: Change secret key
         return jsonwebtoken_1.default.sign(payload, 'secret', { expiresIn: '1h' });
     };
-    JWTService.prototype.setJwtTokenInCookie = function (payload, res) {
+    JWTService.prototype.setJwtInCookie = function (payload, res) {
         var token = this.generateToken(payload);
         cookie_service_1.default.setCookie(app_cookies_1.AppCookie.JWT, token, res);
+    };
+    JWTService.prototype.getJwtInCookie = function (req) {
+        var token = cookie_service_1.default.getCookie(app_cookies_1.AppCookie.JWT, req);
+        if (!token)
+            return undefined;
+        try {
+            var userPayload = jsonwebtoken_1.default.verify(token, 'secret');
+            console.log(userPayload);
+            return userPayload;
+        }
+        catch (err) {
+            console.log(err);
+            return undefined;
+        }
     };
     return JWTService;
 }());
