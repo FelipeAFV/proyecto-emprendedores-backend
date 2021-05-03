@@ -41,7 +41,7 @@ var Profile = /** @class */ (function () {
         __metadata("design:type", String)
     ], Profile.prototype, "email", void 0);
     __decorate([
-        typeorm_1.ManyToOne(function () { return user_1.User; }),
+        typeorm_1.ManyToOne(function () { return user_1.User; }, { cascade: true }),
         typeorm_1.JoinColumn({ name: "user_id" }),
         __metadata("design:type", user_1.User)
     ], Profile.prototype, "user", void 0);

@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 require("./create-database");
 var cors_1 = __importDefault(require("cors"));
+var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var login_routes_1 = require("./routes/login_routes");
 var app = express_1.default();
 var port = process.env.port || 3000;
@@ -53,12 +54,25 @@ app.use(cors_1.default({
     credentials: true,
     origin: 'http://localhost:4200'
 }));
+app.use(cookie_parser_1.default());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded());
 app.use('/cookie', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        jwt_service_1.default.setJwtTokenInCookie({ role: app_role_1.AppRole.CLIENT }, res);
+        jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT }, res);
         res.send('Cookie set');
+        return [2 /*return*/];
+    });
+}); });
+app.use('/verifycookie', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var payload;
+    return __generator(this, function (_a) {
+        payload = jwt_service_1.default.getJwtInCookie(req);
+        if (!payload) {
+            console.log('Token Not provided or expired');
+            res.send('Token Not provided or expired');
+        }
+        res.send(payload);
         return [2 /*return*/];
     });
 }); });

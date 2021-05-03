@@ -40,7 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var user_service_1 = __importDefault(require("../services/user-service"));
+var client_service_1 = __importDefault(require("../services/client-service"));
 var user_1 = require("../model/entity/user");
+var profile_1 = require("../model/entity/profile");
+var client_1 = require("../model/entity/client");
 var bcrypt_1 = __importDefault(require("bcrypt"));
 var login_controler = /** @class */ (function () {
     function login_controler() {
@@ -57,12 +60,9 @@ var login_controler = /** @class */ (function () {
                     case 1:
                         user_found = _a.sent();
                         if (user_found) {
-                            res.json({ error: "user alredy exists" });
+                            res.status(500).json({ error: "user alredy exists" });
                         }
                         else {
-                            //const new_user = new User();
-                            //new_user.username = req.body.username;
-                            //new_user.password = req.body.password;
                             bcrypt_1.default.hash(req.body.password, 5)
                                 .then(function (hash) {
                                 var new_user = new user_1.User();
@@ -70,10 +70,31 @@ var login_controler = /** @class */ (function () {
                                 new_user.password = hash;
                                 return Promise.resolve(new_user);
                             })
-                                .then(function (new_user) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
-                                return [2 /*return*/, user_service_1.default.create(new_user)];
-                            }); }); });
-                            res.json({ message: "user added succesfully" });
+                                .then(function (new_user) {
+                                var new_profile = new profile_1.Profile();
+                                new_profile.firstName = req.body.firstname;
+                                new_profile.lastName = req.body.lastname;
+                                new_profile.email = req.body.email;
+                                new_profile.user = new_user;
+                                return Promise.resolve(new_profile);
+                            })
+                                .then(function (new_profile) { return __awaiter(_this, void 0, void 0, function () {
+                                var new_client;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            new_client = new client_1.Client();
+                                            new_client.profile = new_profile;
+                                            return [4 /*yield*/, client_service_1.default.create(new_client)];
+                                        case 1:
+                                            _a.sent();
+                                            res.status(200).json({ message: "user added succesfully" });
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); }).catch(function (error) {
+                                res.status(500).json({ error: "internal server error" });
+                            });
                         }
                         return [2 /*return*/];
                 }
