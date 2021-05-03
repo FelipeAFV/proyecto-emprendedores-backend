@@ -19,9 +19,6 @@ class login_controler{
         if(user_found){
             res.status(500).json({error: "user alredy exists"})
          }else{
-                //const new_user = new User();
-                //new_user.username = req.body.username;
-                //new_user.password = req.body.password;
                 bcrypt.hash(req.body.password, 5)
                     .then( (hash) => {
                         const new_user = new User();
