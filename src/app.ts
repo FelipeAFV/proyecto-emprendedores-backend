@@ -3,7 +3,7 @@ import { send } from "node:process";
 import "./create-database";
 import cors from "cors";
 import helmet from "helmet";
-import {router as login_router } from "./routes/login_routes";
+import {router as authController } from "./routes/auth";
 const app = express();
 const port = process.env.port || 3000;
 import JWTService from "./services/token/jwt-service";
@@ -16,14 +16,14 @@ app.use(cors({
     credentials: true,
     origin: 'http://localhost:4200'
 }));
-app.use(helmet);
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded());
 app.use('/cookie', async (req, res , next) => {
     JWTService.setJwtTokenInCookie({role: AppRole.CLIENT}, res);
     res.send('Cookie set')
 })
-app.use("/api/login",login_router);
+app.use("/api",authController);
 
 app.get("/", (req,res) => res.send("home page"))
 

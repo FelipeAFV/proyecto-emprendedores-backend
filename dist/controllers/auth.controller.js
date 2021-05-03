@@ -45,6 +45,8 @@ var user_1 = require("../model/entity/user");
 var profile_1 = require("../model/entity/profile");
 var client_1 = require("../model/entity/client");
 var bcrypt_1 = __importDefault(require("bcrypt"));
+var jwt_service_1 = __importDefault(require("services/token/jwt-service"));
+var cookie_service_1 = __importDefault(require("../services/cookie/cookie-service"));
 var authController = /** @class */ (function () {
     function authController() {
         var _this = this;
@@ -101,8 +103,33 @@ var authController = /** @class */ (function () {
             });
         }); };
         this.signIn = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
+            var _a, username, password, user, checkPassword, token, setCookie, userNoPass;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, username = _a.username, password = _a.password;
+                        if (!!(username && password)) return [3 /*break*/, 1];
+                        return [2 /*return*/, res.status(400).json({ message: 'Username & Password are required' })];
+                    case 1: return [4 /*yield*/, user_service_1.default.getByConditions({ username: username })];
+                    case 2:
+                        user = _b.sent();
+                        if (!!user) return [3 /*break*/, 3];
+                        return [2 /*return*/, res.status(400).json({ message: 'User not found' })];
+                    case 3: return [4 /*yield*/, bcrypt_1.default.compare(password, user.password)];
+                    case 4:
+                        checkPassword = _b.sent();
+                        if (!checkPassword) {
+                            return [2 /*return*/, res.status(400).json({ message: 'Password Incorrect' })];
+                        }
+                        else {
+                            token = jwt_service_1.default.setJwtTokenInCookie();
+                            setCookie = cookie_service_1.default.setCookie(token, "cookie", res.status(201).json({ message: "setting cookie" }));
+                            userNoPass = { username: user.username };
+                            return [2 /*return*/, res.json(userNoPass)];
+                        }
+                        _b.label = 5;
+                    case 5: return [2 /*return*/];
+                }
             });
         }); };
     }

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 var typeorm_1 = require("typeorm");
 var profile_1 = require("./profile");
-var class_validator_1 = require("class-validator");
+//import {MinLength} from 'class-validator';
 var User = /** @class */ (function () {
     function User() {
     }
@@ -22,12 +22,10 @@ var User = /** @class */ (function () {
     ], User.prototype, "id", void 0);
     __decorate([
         typeorm_1.Column({ name: "username" }),
-        class_validator_1.MinLength(8),
         __metadata("design:type", String)
     ], User.prototype, "username", void 0);
     __decorate([
         typeorm_1.Column({ name: "password" }),
-        class_validator_1.MinLength(8),
         __metadata("design:type", String)
     ], User.prototype, "password", void 0);
     __decorate([
