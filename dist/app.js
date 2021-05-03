@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 require("./create-database");
 var cors_1 = __importDefault(require("cors"));
+var helmet_1 = __importDefault(require("helmet"));
 var login_routes_1 = require("./routes/login_routes");
 var app = express_1.default();
 var port = process.env.port || 3000;
@@ -15,6 +16,7 @@ app.use(cors_1.default({
     credentials: true,
     origin: 'http://localhost:4200'
 }));
+app.use(helmet_1.default);
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded());
 app.use("/api/login", login_routes_1.router);
