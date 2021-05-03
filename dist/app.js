@@ -59,7 +59,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded());
 app.use('/cookie', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        jwt_service_1.default.setJwtTokenInCookie({ role: app_role_1.AppRole.CLIENT }, res);
+        jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT }, res);
         res.send('Cookie set');
         return [2 /*return*/];
     });
