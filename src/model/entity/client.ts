@@ -7,7 +7,7 @@ export class Client {
     @PrimaryGeneratedColumn({name: "client_id"})
     id: number;
 
-    @OneToOne( () => Profile)
+    @OneToOne( () => Profile,{cascade : true})
     @JoinColumn({name: "profile_id"})
     profile: Profile;
 }

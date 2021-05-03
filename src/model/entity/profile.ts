@@ -24,7 +24,7 @@ export class Profile {
     @Column({name: "email"})
     email: string;
 
-    @ManyToOne( () => User)
+    @ManyToOne( () => User,{cascade : true})
     @JoinColumn({name: "user_id"})
     user: User;
 }
