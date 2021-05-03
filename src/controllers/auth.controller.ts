@@ -8,12 +8,12 @@ import {Client} from "../model/entity/client";
 import { AppRole } from "../model/enums/app-role";
 import bcrypt from "bcrypt";
 
-class login_controler{
+class authController{
     controllertest = (req: Request,res:Response) => {
         res.send("controller responding")
-    }
+    };
 
-    signup = async (req: Request,res:Response) => {
+    signUp = async (req: Request,res:Response) => {
         const user_found = await UserService.getByConditions({where: {username: req.body.username}});
         
         if(user_found){
@@ -58,7 +58,11 @@ class login_controler{
         //         .then(async (new_user) => UserService.create(new_user));    
         //     res.json({message: "user added succesfully"})
         // }
-    }
+    };
+
+    signIn = async (req:Request, res:Response) => {
+        
+    };
 }
 
-export default new login_controler();
+export default new authController();
