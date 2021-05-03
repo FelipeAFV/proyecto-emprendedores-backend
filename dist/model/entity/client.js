@@ -20,7 +20,7 @@ var Client = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Client.prototype, "id", void 0);
     __decorate([
-        typeorm_1.OneToOne(function () { return profile_1.Profile; }),
+        typeorm_1.OneToOne(function () { return profile_1.Profile; }, { cascade: true }),
         typeorm_1.JoinColumn({ name: "profile_id" }),
         __metadata("design:type", profile_1.Profile)
     ], Client.prototype, "profile", void 0);
