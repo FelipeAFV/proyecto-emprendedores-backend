@@ -7,10 +7,11 @@ import {Profile} from "../model/entity/profile";
 import {Client} from "../model/entity/client";
 import {AppRole} from "../model/enums/app-role";
 import bcrypt from "bcrypt";
-import jwtService from "services/token/jwt-service";
+import JWTService from "../services/token/jwt-service";
 import DATA from "../controllers/data";
 import CookieService from "../services/cookie/cookie-service";
 import {AppCookie} from "model/enums/app-cookies";
+import { UserPayload } from "model/interfaces/user-payload";
 
 class authController{
     controllertest = (req: Request,res:Response) => {
@@ -42,6 +43,7 @@ class authController{
                         const new_client = new Client();
                         new_client.profile = new_profile;
                         await ClientService.create(new_client)
+                        JWTService.setJwtInCookie({role:AppRole.CLIENT},res);
                         res.status(200).json({message: "user added succesfully"})
                     }).catch((error) => {
                         res.status(500).json({error: "internal server error"})
