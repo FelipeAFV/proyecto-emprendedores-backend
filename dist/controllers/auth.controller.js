@@ -35,38 +35,93 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var typeorm_1 = require("typeorm");
+var user_service_1 = __importDefault(require("../services/user-service"));
+var client_service_1 = __importDefault(require("../services/client-service"));
 var user_1 = require("../model/entity/user");
-var AuthController = /** @class */ (function () {
-    function AuthController() {
+var profile_1 = require("../model/entity/profile");
+var client_1 = require("../model/entity/client");
+var bcrypt_1 = __importDefault(require("bcrypt"));
+var authController = /** @class */ (function () {
+    function authController() {
+        var _this = this;
+        this.controllertest = function (req, res) {
+            res.send("controller responding");
+        };
+        this.signUp = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var user_found;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, user_service_1.default.getByConditions({ where: { username: req.body.username } })];
+                    case 1:
+                        user_found = _a.sent();
+                        if (user_found) {
+                            res.status(500).json({ error: "user alredy exists" });
+                        }
+                        else {
+                            bcrypt_1.default.hash(req.body.password, 5)
+                                .then(function (hash) {
+                                var new_user = new user_1.User();
+                                new_user.username = req.body.username;
+                                new_user.password = hash;
+                                return Promise.resolve(new_user);
+                            })
+                                .then(function (new_user) {
+                                var new_profile = new profile_1.Profile();
+                                new_profile.firstName = req.body.firstname;
+                                new_profile.lastName = req.body.lastname;
+                                new_profile.email = req.body.email;
+                                new_profile.user = new_user;
+                                return Promise.resolve(new_profile);
+                            })
+                                .then(function (new_profile) { return __awaiter(_this, void 0, void 0, function () {
+                                var new_client;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            new_client = new client_1.Client();
+                                            new_client.profile = new_profile;
+                                            return [4 /*yield*/, client_service_1.default.create(new_client)];
+                                        case 1:
+                                            _a.sent();
+                                            res.status(200).json({ message: "user added succesfully" });
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); }).catch(function (error) {
+                                res.status(500).json({ error: "internal server error" });
+                            });
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        // signIn = async (req:Request, res:Response) => {
+        //     const {username, password} = req.body;
+        //     if(!(username && password)) {
+        //         return res.status(400).json({ message: 'Username & Password are required'});
+        //     } else {
+        //         const user = await UserService.getByConditions({username: username});
+        //         if (!user)  {
+        //             return res.status(400).json({message:'User not found'});
+        //         } else {
+        //             const checkPassword = await bcrypt.compare(password, user.password);
+        //             if (!checkPassword) {
+        //                 return res.status(400).json({message : 'Password Incorrect'});
+        //             } else {
+        //                 const token = jwtService.setJwtInCookie();
+        //                 const setCookie = CookieService.setCookie(token, "cookie", res.status(201).json({message: "setting cookie"}));
+        //                 const userNoPass = {username:user.username};
+        //                 return res.json(userNoPass);
+        //                 }
+        //             }
+        //         }
+        //     }
     }
-    AuthController.login = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, username, password, userRespository, user, e_1;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    _a = req.body, username = _a.username, password = _a.password;
-                    if (!(username && password)) {
-                        res.status(400).json({ message: 'Username & Password are required! ' });
-                    }
-                    userRespository = typeorm_1.getRepository(user_1.User);
-                    _b.label = 1;
-                case 1:
-                    _b.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, userRespository.findOneOrFail({ where: { username: username } })];
-                case 2:
-                    user = _b.sent();
-                    return [3 /*break*/, 4];
-                case 3:
-                    e_1 = _b.sent();
-                    return [2 /*return*/, res.status(400).json({ message: 'Username or password incorrect!' })];
-                case 4:
-                    res.send(user);
-                    return [2 /*return*/];
-            }
-        });
-    }); };
-    return AuthController;
+    return authController;
 }());
-exports.default = AuthController;
+exports.default = new authController();

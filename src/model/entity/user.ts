@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn , Unique} from "typeorm";
 import { Profile } from "./profile";
-import {MinLength} from 'class-validator';
+//import {MinLength} from 'class-validator';
 
 
 @Entity("user")
@@ -11,11 +11,11 @@ export class User {
     id: number;
 
     @Column({name: "username"})
-    @MinLength(8)
+    //@MinLength(8)
     username: string;
     
     @Column({name: "password"})
-    @MinLength(8)
+    //@MinLength(8)
     password: string;
 
     @OneToMany(() => Profile, profile => profile.user )
