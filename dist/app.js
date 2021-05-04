@@ -67,7 +67,7 @@ app.use('/cookie', function (req, res, next) { return __awaiter(void 0, void 0, 
 app.use('/verifycookie', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var payload;
     return __generator(this, function (_a) {
-        payload = jwt_service_1.default.getJwtInCookie(req);
+        payload = jwt_service_1.default.getJwtPayloadInCookie(req);
         if (!payload) {
             console.log('Token Not provided or expired');
             res.send('Token Not provided or expired');

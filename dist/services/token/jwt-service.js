@@ -17,7 +17,7 @@ var JWTService = /** @class */ (function () {
         var token = this.generateToken(payload);
         cookie_service_1.default.setCookie(app_cookies_1.AppCookie.JWT, token, res);
     };
-    JWTService.prototype.getJwtInCookie = function (req) {
+    JWTService.prototype.getJwtPayloadInCookie = function (req) {
         var token = cookie_service_1.default.getCookie(app_cookies_1.AppCookie.JWT, req);
         if (!token)
             return undefined;
