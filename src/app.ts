@@ -9,7 +9,7 @@ const app = express();
 const port = process.env.port || 3000;
 import JWTService from "./services/token/jwt-service";
 import { AppRole } from "./model/enums/app-role";
-
+import payload_check from "./middlewares/payload_checker"
 
 //global middleware
 /**Middleware for cors policy*/
@@ -28,14 +28,15 @@ app.use('/cookie', async (req, res , next) => {
     res.send('Cookie set')
 })
 app.use("/api",authController);
-app.use('/verifycookie', async (req, res , next) => {
-    const payload = JWTService.getJwtPayloadInCookie(req);
-    if (!payload) {
-        console.log('Token Not provided or expired');
-        res.send('Token Not provided or expired');
-    }
-    res.send(payload);
-})
+//app.use('/verifycookie',payload_check,(req,res) => res.send(req.payload)) async (req, res , next) => {
+    // const payload = JWTService.getJwtPayloadInCookie(req);
+    // if (!payload) {
+    //     console.log('Token Not provided or expired');
+    //     res.send('Token Not provided or expired');
+    // }
+    // res.send(payload);
+    
+//})
 
 app.get("/", (req,res) => res.send("home page"))
 

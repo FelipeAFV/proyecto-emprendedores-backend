@@ -7,10 +7,11 @@ import {Profile} from "../model/entity/profile";
 import {Client} from "../model/entity/client";
 import {AppRole} from "../model/enums/app-role";
 import bcrypt from "bcrypt";
-import jwtService from "services/token/jwt-service";
+import JWTService from "../services/token/jwt-service";
 import DATA from "../controllers/data";
 import CookieService from "../services/cookie/cookie-service";
 import {AppCookie} from "model/enums/app-cookies";
+import { UserPayload } from "model/interfaces/user-payload";
 
 class authController{
     controllertest = (req: Request,res:Response) => {
@@ -42,6 +43,7 @@ class authController{
                         const new_client = new Client();
                         new_client.profile = new_profile;
                         await ClientService.create(new_client)
+                        JWTService.setJwtInCookie({role:AppRole.CLIENT},res);
                         res.status(200).json({message: "user added succesfully"})
                     }).catch((error) => {
                         res.status(500).json({error: "internal server error"})
@@ -64,34 +66,18 @@ class authController{
         // }
     };
 
-    // signIn = async (req:Request, res:Response) => {
-    //     const {username, password} = req.body;
+    signIn = async (req:Request, res:Response) => {
+        const {username, password} = req.body;
+        const user = await UserService.getByConditions({username: username});
+        if(!user) return res.status(401).send('User not found');
+        const checkPass = await bcrypt.compare(password, user.password);
+        if(!checkPass) return res.status(401).send('Incorrect password');
 
-    //     if(!(username && password)) {
-    //         return res.status(400).json({ message: 'Username & Password are required'});
-    //     } else {
-            
-    //         const user = await UserService.getByConditions({username: username});
-    //         if (!user)  {
-    //             return res.status(400).json({message:'User not found'});
-    //         } else {
-    //             const checkPassword = await bcrypt.compare(password, user.password);
-    //             if (!checkPassword) {
-    //                 return res.status(400).json({message : 'Password Incorrect'});
-    //             } else {
-    //                 const token = jwtService.setJwtInCookie();
-    //                 const setCookie = CookieService.setCookie(token, "cookie", res.status(201).json({message: "setting cookie"}));
-
-
-    //                 const userNoPass = {username:user.username};
-    //                 return res.json(userNoPass);
-                        
-    //                 }
-    //             }
-    //         }
-            
-           
-    //     }
+        //setting cookie
+        JWTService.setJwtInCookie({ role: AppRole.CLIENT }, res);
+        res.status(200).json({message: "Successful"})
+        
+    }
 
         
     }
