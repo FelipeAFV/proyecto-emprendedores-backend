@@ -28,7 +28,7 @@ app.use('/cookie', async (req, res , next) => {
     res.send('Cookie set')
 })
 app.use("/api",authController);
-app.use('/verifycookie',payload_check,(req,res) => res.send(req.payload))// async (req, res , next) => {
+//app.use('/verifycookie',payload_check,(req,res) => res.send(req.payload)) async (req, res , next) => {
     // const payload = JWTService.getJwtPayloadInCookie(req);
     // if (!payload) {
     //     console.log('Token Not provided or expired');

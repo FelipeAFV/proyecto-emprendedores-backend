@@ -66,34 +66,18 @@ class authController{
         // }
     };
 
-    // signIn = async (req:Request, res:Response) => {
-    //     const {username, password} = req.body;
+    signIn = async (req:Request, res:Response) => {
+        const {username, password} = req.body;
+        const user = await UserService.getByConditions({username: username});
+        if(!user) return res.status(401).send('User not found');
+        const checkPass = await bcrypt.compare(password, user.password);
+        if(!checkPass) return res.status(401).send('Incorrect password');
 
-    //     if(!(username && password)) {
-    //         return res.status(400).json({ message: 'Username & Password are required'});
-    //     } else {
-            
-    //         const user = await UserService.getByConditions({username: username});
-    //         if (!user)  {
-    //             return res.status(400).json({message:'User not found'});
-    //         } else {
-    //             const checkPassword = await bcrypt.compare(password, user.password);
-    //             if (!checkPassword) {
-    //                 return res.status(400).json({message : 'Password Incorrect'});
-    //             } else {
-    //                 const token = jwtService.setJwtInCookie();
-    //                 const setCookie = CookieService.setCookie(token, "cookie", res.status(201).json({message: "setting cookie"}));
-
-
-    //                 const userNoPass = {username:user.username};
-    //                 return res.json(userNoPass);
-                        
-    //                 }
-    //             }
-    //         }
-            
-           
-    //     }
+        //setting cookie
+        JWTService.setJwtInCookie({ role: AppRole.CLIENT }, res);
+        res.status(200).json({message: "Successful"})
+        
+    }
 
         
     }
