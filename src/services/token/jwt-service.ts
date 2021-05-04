@@ -21,7 +21,7 @@ class JWTService {
         if (!token) return undefined;
         try {
 
-            const userPayload: UserPayload = <UserPayload> jwt.verify(token, 'secret');
+            const userPayload: UserPayload = jwt.verify(token, 'secret') as UserPayload;
             console.log(userPayload);
             return userPayload;
         } catch(err) {
