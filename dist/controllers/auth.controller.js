@@ -46,7 +46,10 @@ var profile_1 = require("../model/entity/profile");
 var client_1 = require("../model/entity/client");
 var app_role_1 = require("../model/enums/app-role");
 var bcrypt_1 = __importDefault(require("bcrypt"));
+<<<<<<< HEAD
 var jwt_service_1 = __importDefault(require("../services/token/jwt-service"));
+=======
+>>>>>>> master
 var authController = /** @class */ (function () {
     function authController() {
         var _this = this;
@@ -102,6 +105,7 @@ var authController = /** @class */ (function () {
                 }
             });
         }); };
+<<<<<<< HEAD
         this.signIn = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
             var _a, username, password, user, checkPass;
             return __generator(this, function (_b) {
@@ -125,6 +129,29 @@ var authController = /** @class */ (function () {
                 }
             });
         }); };
+=======
+        // signIn = async (req:Request, res:Response) => {
+        //     const {username, password} = req.body;
+        //     if(!(username && password)) {
+        //         return res.status(400).json({ message: 'Username & Password are required'});
+        //     } else {
+        //         const user = await UserService.getByConditions({username: username});
+        //         if (!user)  {
+        //             return res.status(400).json({message:'User not found'});
+        //         } else {
+        //             const checkPassword = await bcrypt.compare(password, user.password);
+        //             if (!checkPassword) {
+        //                 return res.status(400).json({message : 'Password Incorrect'});
+        //             } else {
+        //                 const token = jwtService.setJwtInCookie();
+        //                 const setCookie = CookieService.setCookie(token, "cookie", res.status(201).json({message: "setting cookie"}));
+        //                 const userNoPass = {username:user.username};
+        //                 return res.json(userNoPass);
+        //                 }
+        //             }
+        //         }
+        //     }
+>>>>>>> master
     }
     return authController;
 }());

@@ -10,7 +10,11 @@ class AuthMid {
                 if(err) {
                     res.status(400).json({message : 'Token not valid'});
                 } else {
+<<<<<<< HEAD
                     // ALGUN TIPO DE CHECKEO
+=======
+                    // 
+>>>>>>> master
                     
                     next();
                 }
