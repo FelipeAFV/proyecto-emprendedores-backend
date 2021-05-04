@@ -7,7 +7,7 @@ import {Profile} from "../model/entity/profile";
 import {Client} from "../model/entity/client";
 import {AppRole} from "../model/enums/app-role";
 import bcrypt from "bcrypt";
-import jwtService from "services/token/jwt-service";
+import jwtService from "../services/token/jwt-service";
 import DATA from "../controllers/data";
 import CookieService from "../services/cookie/cookie-service";
 import {AppCookie} from "model/enums/app-cookies";
@@ -66,34 +66,16 @@ class authController{
 
     signIn = async (req:Request, res:Response) => {
         const {username, password} = req.body;
+        const user = await UserService.getByConditions({username: username});
+        if(!user) return res.status(401).send('User not found');
+        const checkPass = await bcrypt.compare(password, user.password);
+        if(!checkPass) return res.status(401).send('Incorrect password');
 
-        if(!(username && password)) {
-            return res.status(400).json({ message: 'Username & Password are required'});
-        } else {
-            
-            const user = await UserService.getByConditions({username: username});
-            if (!user)  {
-                return res.status(400).json({message:'User not found'});
-            } else {
-                const checkPassword = await bcrypt.compare(password, user.password);
-                if (!checkPassword) {
-                    return res.status(400).json({message : 'Password Incorrect'});
-                } else {
-                    const token = jwtService.setJwtTokenInCookie();
-                    const setCookie = CookieService.setCookie(token, "cookie", res.status(201).json({message: "setting cookie"}));
-
-
-                    const userNoPass = {username:user.username};
-                    return res.json(userNoPass);
-                        
-                    }
-                }
-            }
-            
-           
-        }
-
+        //setting cookie
+        jwtService.setJwtTokenInCookie({ role: AppRole.CLIENT }, res);
+        res.status(200).json({message: "Successful"})
         
     }
+}
 
 export default new authController();
