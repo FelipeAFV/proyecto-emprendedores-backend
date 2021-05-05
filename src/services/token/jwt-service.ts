@@ -8,7 +8,7 @@ class JWTService {
 
     private generateToken(payload: UserPayload):string {
         // TODO: Change secret key
-        return jwt.sign(payload, 'secret', {expiresIn: '1h'});
+        return jwt.sign(payload, 'secret', {expiresIn: '3h'});
     }
 
     setJwtInCookie(payload: UserPayload, res: Response) {

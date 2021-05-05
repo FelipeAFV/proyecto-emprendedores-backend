@@ -39,50 +39,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-require("./create-database");
-var cors_1 = __importDefault(require("cors"));
-var helmet_1 = __importDefault(require("helmet"));
-var auth_1 = require("./routes/auth");
-var cookie_parser_1 = __importDefault(require("cookie-parser"));
-var app = express_1.default();
-var port = process.env.port || 3000;
-var jwt_service_1 = __importDefault(require("./services/token/jwt-service"));
-var app_role_1 = require("./model/enums/app-role");
-var payload_checker_1 = __importDefault(require("./middlewares/payload_checker"));
-var role_auth_1 = __importDefault(require("./middlewares/role-auth"));
-//global middleware
-/**Middleware for cors policy*/
-app.use(cors_1.default({
-    credentials: true,
-    origin: 'http://localhost:4200'
-}));
-app.use(helmet_1.default());
-app.use(cookie_parser_1.default());
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded());
-app.use('/cookie', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT }, res);
-        res.send('Cookie set');
-        return [2 /*return*/];
-    });
-}); });
-/**Authentication and Authorization routes */
-app.use("/", auth_1.router);
-/**Authentication protected route : only logged users can access */
-app.use('/api', payload_checker_1.default);
-/**Authorization protected route : only users with certain roles can access */
-app.use('/api/adminRoute', role_auth_1.default.checkRole([app_role_1.AppRole.ADMIN, app_role_1.AppRole.CLIENT]), function (req, res) {
-    res.status(200).json({ message: 'Admin data' });
-});
-//app.use('/verifycookie',payload_check,(req,res) => res.send(req.payload)) async (req, res , next) => {
-// const payload = JWTService.getJwtPayloadInCookie(req);
-// if (!payload) {
-//     console.log('Token Not provided or expired');
-//     res.send('Token Not provided or expired');
-// }
-// res.send(payload);
-//})
-app.get("/", function (req, res) { return res.send("home page"); });
-app.listen(port, function () { return console.log("server running..."); });
+var data_1 = __importDefault(require("../controllers/data"));
+var jwt = require('jsonwebtoken');
+var AuthMid = /** @class */ (function () {
+    function AuthMid() {
+    }
+    AuthMid.prototype.authCheck = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var JWT;
+            return __generator(this, function (_a) {
+                JWT = req.cookies.JWT;
+                if (JWT) {
+                    jwt.verify(JWT, data_1.default.TOKEN_SECRET, function (err, payload) {
+                        if (err) {
+                            res.status(400).json({ message: 'Token not valid' });
+                        }
+                        else {
+                            // 
+                            next();
+                        }
+                    });
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    return AuthMid;
+}());
+exports.default = new AuthMid();

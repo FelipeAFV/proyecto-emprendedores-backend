@@ -44,7 +44,9 @@ var client_service_1 = __importDefault(require("../services/client-service"));
 var user_1 = require("../model/entity/user");
 var profile_1 = require("../model/entity/profile");
 var client_1 = require("../model/entity/client");
+var app_role_1 = require("../model/enums/app-role");
 var bcrypt_1 = __importDefault(require("bcrypt"));
+var jwt_service_1 = __importDefault(require("../services/token/jwt-service"));
 var authController = /** @class */ (function () {
     function authController() {
         var _this = this;
@@ -88,6 +90,7 @@ var authController = /** @class */ (function () {
                                             return [4 /*yield*/, client_service_1.default.create(new_client)];
                                         case 1:
                                             _a.sent();
+                                            jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT }, res);
                                             res.status(200).json({ message: "user added succesfully" });
                                             return [2 /*return*/];
                                     }
@@ -100,27 +103,29 @@ var authController = /** @class */ (function () {
                 }
             });
         }); };
-        // signIn = async (req:Request, res:Response) => {
-        //     const {username, password} = req.body;
-        //     if(!(username && password)) {
-        //         return res.status(400).json({ message: 'Username & Password are required'});
-        //     } else {
-        //         const user = await UserService.getByConditions({username: username});
-        //         if (!user)  {
-        //             return res.status(400).json({message:'User not found'});
-        //         } else {
-        //             const checkPassword = await bcrypt.compare(password, user.password);
-        //             if (!checkPassword) {
-        //                 return res.status(400).json({message : 'Password Incorrect'});
-        //             } else {
-        //                 const token = jwtService.setJwtInCookie();
-        //                 const setCookie = CookieService.setCookie(token, "cookie", res.status(201).json({message: "setting cookie"}));
-        //                 const userNoPass = {username:user.username};
-        //                 return res.json(userNoPass);
-        //                 }
-        //             }
-        //         }
-        //     }
+        this.signIn = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, username, password, user, checkPass;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, username = _a.username, password = _a.password;
+                        return [4 /*yield*/, user_service_1.default.getByConditions({ username: username })];
+                    case 1:
+                        user = _b.sent();
+                        if (!user)
+                            return [2 /*return*/, res.status(401).send('User not found')];
+                        return [4 /*yield*/, bcrypt_1.default.compare(password, user.password)];
+                    case 2:
+                        checkPass = _b.sent();
+                        if (!checkPass)
+                            return [2 /*return*/, res.status(401).send('Incorrect password')];
+                        //setting cookie
+                        jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT }, res);
+                        res.status(200).json({ message: "Successful" });
+                        return [2 /*return*/];
+                }
+            });
+        }); };
     }
     return authController;
 }());

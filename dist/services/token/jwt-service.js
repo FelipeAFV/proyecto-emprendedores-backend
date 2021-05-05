@@ -11,7 +11,7 @@ var JWTService = /** @class */ (function () {
     }
     JWTService.prototype.generateToken = function (payload) {
         // TODO: Change secret key
-        return jsonwebtoken_1.default.sign(payload, 'secret', { expiresIn: '1h' });
+        return jsonwebtoken_1.default.sign(payload, 'secret', { expiresIn: '3h' });
     };
     JWTService.prototype.setJwtInCookie = function (payload, res) {
         var token = this.generateToken(payload);
