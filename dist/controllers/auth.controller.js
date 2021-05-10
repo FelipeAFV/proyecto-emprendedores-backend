@@ -91,7 +91,7 @@ var authController = /** @class */ (function () {
                                         case 1:
                                             _a.sent();
                                             jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT }, res);
-                                            res.status(200).json({ message: "user added succesfully" });
+                                            res.status(200).json({ message: "user added succesfully", profile: new_profile });
                                             return [2 /*return*/];
                                     }
                                 });
@@ -104,12 +104,12 @@ var authController = /** @class */ (function () {
             });
         }); };
         this.signIn = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, username, password, user, checkPass;
+            var _a, username, password, user, checkPass, userProfile;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, username = _a.username, password = _a.password;
-                        return [4 /*yield*/, user_service_1.default.getByConditions({ username: username })];
+                        return [4 /*yield*/, user_service_1.default.getByConditions({ where: { username: username }, relations: ['profiles'] })];
                     case 1:
                         user = _b.sent();
                         if (!user)
@@ -119,9 +119,9 @@ var authController = /** @class */ (function () {
                         checkPass = _b.sent();
                         if (!checkPass)
                             return [2 /*return*/, res.status(401).send('Incorrect password')];
-                        //setting cookie
                         jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT }, res);
-                        res.status(200).json({ message: "Successful" });
+                        userProfile = user.profiles.find(function (profile) { return profile.role === app_role_1.AppRole.CLIENT; });
+                        res.status(200).json({ message: "Successful", profile: userProfile });
                         return [2 /*return*/];
                 }
             });

@@ -12,6 +12,7 @@ import DATA from "../controllers/data";
 import CookieService from "../services/cookie/cookie-service";
 import {AppCookie} from "model/enums/app-cookies";
 import { UserPayload } from "model/interfaces/user-payload";
+import { profile } from "node:console";
 
 class authController{
     controllertest = (req: Request,res:Response) => {
@@ -21,7 +22,7 @@ class authController{
     signUp = async (req: Request,res:Response) => {
         const user_found = await UserService.getByConditions({where: {username: req.body.username}});
         
-        if(user_found){
+        if(user_found){ 
             res.status(500).json({error: "user alredy exists"})
          }else{
                 bcrypt.hash(req.body.password, 5)
@@ -44,7 +45,7 @@ class authController{
                         new_client.profile = new_profile;
                         await ClientService.create(new_client)
                         JWTService.setJwtInCookie({role:AppRole.CLIENT},res);
-                        res.status(200).json({message: "user added succesfully"})
+                        res.status(200).json({message: "user added succesfully", profile: new_profile})
                     }).catch((error) => {
                         res.status(500).json({error: "internal server error"})
                     })   
@@ -68,16 +69,17 @@ class authController{
 
     signIn = async (req:Request, res:Response) => {
         const {username, password} = req.body;
-        const user = await UserService.getByConditions({username: username});
+        const user = await UserService.getByConditions({where: {username: username}, relations: ['profiles']});
         if(!user) return res.status(401).send('User not found');
         const checkPass = await bcrypt.compare(password, user.password);
         if(!checkPass) return res.status(401).send('Incorrect password');
-
-        //setting cookie
+        
         JWTService.setJwtInCookie({ role: AppRole.CLIENT }, res);
-        res.status(200).json({message: "Successful"})
+        const userProfile = user.profiles.find((profile) => profile.role === AppRole.CLIENT);
+        res.status(200).json({message: "Successful", profile: userProfile})
         
     }
+
 
         
     }

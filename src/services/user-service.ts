@@ -1,3 +1,4 @@
+import { getRepository } from "typeorm";
 import { User } from "../model/entity/user";
 import { GenericService } from "./generic-service";
 
