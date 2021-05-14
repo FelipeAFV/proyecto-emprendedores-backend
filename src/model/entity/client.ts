@@ -1,5 +1,6 @@
-import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Profile } from "./profile";
+import {Store} from "./store"
 
 @Entity("client")
 export class Client {
@@ -10,4 +11,18 @@ export class Client {
     @OneToOne( () => Profile,{cascade : true})
     @JoinColumn({name: "profile_id"})
     profile: Profile;
+
+    @ManyToMany( () => Store)
+    @JoinTable({
+        name: "client_favorite_stores",
+        joinColumn: {
+            name: "client_id",
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "store_id",
+            referencedColumnName: "id"
+        }
+    })
+    favorite_stores: Store[];
 }

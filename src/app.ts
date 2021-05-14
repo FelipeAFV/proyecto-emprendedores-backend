@@ -12,7 +12,7 @@ import JWTService from "./services/token/jwt-service";
 import { AppRole } from "./model/enums/app-role";
 import payload_check from "./middlewares/payload_checker"
 import roleAuth from "./middlewares/role-auth";
-
+import { Client } from "model/entity/client";
 //global middleware
 /**Middleware for cors policy*/
 app.use(cors({
@@ -29,6 +29,8 @@ app.use('/cookie', async (req, res , next) => {
     JWTService.setJwtInCookie({role: AppRole.CLIENT}, res);
     res.send('Cookie set')
 })
+
+
 
 /**Authentication and Authorization routes */
 app.use("/",authController);
