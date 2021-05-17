@@ -21,7 +21,7 @@ class ClientController{
     };
 
     async getFavoritesStores(req:Request,res:Response){
-        const stores = await ClientService.getByConditions({where:{id:req.body.id},relations:['favorite_stores']})
+        const stores = await ClientService.getByConditions({where:{profile:req.body.id},relations:['favorite_stores']})
         if(!stores?.favorite_stores){
             res.status(401).json({error:"no stores found"})
         }else{
