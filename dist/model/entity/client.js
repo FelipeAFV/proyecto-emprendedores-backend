@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = void 0;
 var typeorm_1 = require("typeorm");
 var profile_1 = require("./profile");
+var store_1 = require("./store");
 var Client = /** @class */ (function () {
     function Client() {
     }
@@ -24,6 +25,21 @@ var Client = /** @class */ (function () {
         typeorm_1.JoinColumn({ name: "profile_id" }),
         __metadata("design:type", profile_1.Profile)
     ], Client.prototype, "profile", void 0);
+    __decorate([
+        typeorm_1.ManyToMany(function () { return store_1.Store; }),
+        typeorm_1.JoinTable({
+            name: "client_favorite_stores",
+            joinColumn: {
+                name: "client_id",
+                referencedColumnName: "id"
+            },
+            inverseJoinColumn: {
+                name: "store_id",
+                referencedColumnName: "id"
+            }
+        }),
+        __metadata("design:type", Array)
+    ], Client.prototype, "favorite_stores", void 0);
     Client = __decorate([
         typeorm_1.Entity("client")
     ], Client);
