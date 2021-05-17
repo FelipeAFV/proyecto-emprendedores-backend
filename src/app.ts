@@ -13,6 +13,7 @@ import { AppRole } from "./model/enums/app-role";
 import payload_check from "./middlewares/payload_checker"
 import roleAuth from "./middlewares/role-auth";
 import { Client } from "model/entity/client";
+import clientRoutes from './routes/client.route';
 //global middleware
 /**Middleware for cors policy*/
 app.use(cors({
@@ -34,6 +35,7 @@ app.use('/cookie', async (req, res , next) => {
 
 /**Authentication and Authorization routes */
 app.use("/",authController);
+app.use('/api', clientRoutes);
 
 /**Authentication protected route : only logged users can access */
 app.use('/api', payload_check);
