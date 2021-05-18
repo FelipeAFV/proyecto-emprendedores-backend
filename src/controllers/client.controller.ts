@@ -21,8 +21,9 @@ class ClientController{
     };
 
     async getFavoritesStores(req:Request,res:Response){
-        const stores = await ClientService.getByConditions({where:{profile:req.body.id},relations:['favorite_stores']})
-        if(!stores?.favorite_stores){
+        const cookiedata = JWTService.getJwtPayloadInCookie(req);
+        const stores = await ClientService.getByConditions({where:{profile:cookiedata?.id},relations:['favorite_stores']})
+        if(stores?.favorite_stores.length === 0){
             res.status(401).json({error:"no stores found"})
         }else{
             res.status(200).json(stores)
