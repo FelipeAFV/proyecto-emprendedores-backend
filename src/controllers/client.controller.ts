@@ -31,14 +31,7 @@ class ClientController{
     }
 
     async deleteStore(req:Request,res:Response) {
-        const {id} = req.body.id;
-        try {
-            await ClientService.deleteById(id)
-        } catch (error) {
-            return res.status(404).json({message: 'Store not found'});
-        }
         
-        res.status(201).json({message: 'Store deleted'});
     }
         
 
