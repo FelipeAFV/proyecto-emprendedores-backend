@@ -3,5 +3,5 @@ import { AppRole } from "model/enums/app-role";
 
 export interface UserPayload {
     role: AppRole,
-    profile?: Profile
+    id?: number
 }
