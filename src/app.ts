@@ -35,11 +35,11 @@ app.use('/cookie', async (req, res , next) => {
 
 /**Authentication and Authorization routes */
 app.use("/",authController);
-app.use('/api', clientRoutes);
+
 
 /**Authentication protected route : only logged users can access */
 app.use('/api', payload_check);
-
+app.use('/api/client', clientRoutes);
 /**Authorization protected route : only users with certain roles can access */
 app.use('/api/adminRoute', roleAuth.checkRole([AppRole.ADMIN, AppRole.CLIENT]), (req: Request, res: Response) => {
     res.status(200).json({message: 'Admin data'});

@@ -13,6 +13,7 @@ import {AppCookie} from "model/enums/app-cookies";
 import { UserPayload } from "model/interfaces/user-payload";
 import { profile } from "node:console";
 import { send } from "node:process";
+import { Store } from "model/entity/store";
 
 class ClientController{
     controllertest = (req: Request,res:Response) => {
@@ -27,6 +28,17 @@ class ClientController{
         }else{
             res.status(200).json(stores)
         }
+    }
+
+    async deleteStore(req:Request,res:Response) {
+        const {id} = req.body.id;
+        try {
+            await ClientService.deleteById(id)
+        } catch (error) {
+            return res.status(404).json({message: 'Store not found'});
+        }
+        
+        res.status(201).json({message: 'Store deleted'});
     }
         
 

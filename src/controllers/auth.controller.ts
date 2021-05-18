@@ -75,7 +75,7 @@ class authController{
         
         JWTService.setJwtInCookie({ role: AppRole.CLIENT }, res);
         const userProfile = user.profiles.find((profile) => profile.role === AppRole.CLIENT);
-        res.status(200).json({message: "Successful", profile: userProfile})
+        res.status(200).json(userProfile);
         
     }
 
