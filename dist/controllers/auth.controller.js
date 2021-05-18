@@ -81,7 +81,7 @@ var authController = /** @class */ (function () {
                                 return Promise.resolve(new_profile);
                             })
                                 .then(function (new_profile) { return __awaiter(_this, void 0, void 0, function () {
-                                var new_client;
+                                var new_client, cli;
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
@@ -89,8 +89,8 @@ var authController = /** @class */ (function () {
                                             new_client.profile = new_profile;
                                             return [4 /*yield*/, client_service_1.default.create(new_client)];
                                         case 1:
-                                            _a.sent();
-                                            jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT }, res);
+                                            cli = _a.sent();
+                                            jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT, profileId: cli.profile.id }, res);
                                             res.status(200).json({ message: "user added succesfully", profile: new_profile });
                                             return [2 /*return*/];
                                     }
@@ -119,9 +119,9 @@ var authController = /** @class */ (function () {
                         checkPass = _b.sent();
                         if (!checkPass)
                             return [2 /*return*/, res.status(401).send('Incorrect password')];
-                        jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT }, res);
                         userProfile = user.profiles.find(function (profile) { return profile.role === app_role_1.AppRole.CLIENT; });
-                        res.status(200).json({ message: "Successful", profile: userProfile });
+                        jwt_service_1.default.setJwtInCookie({ role: app_role_1.AppRole.CLIENT, profileId: userProfile === null || userProfile === void 0 ? void 0 : userProfile.id }, res);
+                        res.status(200).json(userProfile);
                         return [2 /*return*/];
                 }
             });

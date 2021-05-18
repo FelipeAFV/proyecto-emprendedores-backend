@@ -8,6 +8,7 @@ const payload_check = (req:Request,res:Response,next:NextFunction) => {
     if(!payload){
         res.status(400).json({error: 'Token Not provided or expired'})
     }else{
+        console.log('Usuario autenticado');
         req.payload = payload;
         next();
     }
