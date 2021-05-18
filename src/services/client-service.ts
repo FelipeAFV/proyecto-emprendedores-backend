@@ -6,6 +6,7 @@ class ClientService extends GenericService<Client> {
     constructor() {
         super(Client);
     }
+    
 }
 
 export default new ClientService();

@@ -8,7 +8,6 @@ import {Client} from "../model/entity/client";
 import {AppRole} from "../model/enums/app-role";
 import bcrypt from "bcrypt";
 import JWTService from "../services/token/jwt-service";
-import DATA from "../controllers/data";
 import CookieService from "../services/cookie/cookie-service";
 import {AppCookie} from "model/enums/app-cookies";
 import { UserPayload } from "model/interfaces/user-payload";
