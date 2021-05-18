@@ -43,7 +43,7 @@ class authController{
                         const new_client = new Client();
                         new_client.profile = new_profile;
                         const cli = await ClientService.create(new_client)
-                        JWTService.setJwtInCookie({role:AppRole.CLIENT, id:cli.profile.id},res);
+                        JWTService.setJwtInCookie({role:AppRole.CLIENT, profileId:cli.profile.id},res);
                         res.status(200).json({message: "user added succesfully", profile: new_profile})
                     }).catch((error) => {
                         res.status(500).json({error: "internal server error"})
@@ -73,8 +73,8 @@ class authController{
         const checkPass = await bcrypt.compare(password, user.password);
         if(!checkPass) return res.status(401).send('Incorrect password');
         
-        JWTService.setJwtInCookie({ role: AppRole.CLIENT }, res);
         const userProfile = user.profiles.find((profile) => profile.role === AppRole.CLIENT);
+        JWTService.setJwtInCookie({ role: AppRole.CLIENT, profileId: userProfile?.id}, res);
         res.status(200).json(userProfile);
         
     }
