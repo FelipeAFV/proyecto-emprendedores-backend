@@ -14,6 +14,7 @@ import payload_check from "./middlewares/payload_checker"
 import roleAuth from "./middlewares/role-auth";
 import { Client } from "model/entity/client";
 import clientRoutes from './routes/client.route';
+import storeRoutes from "./routes/store.routes";
 //global middleware
 /**Middleware for cors policy*/
 app.use(cors({
@@ -40,6 +41,7 @@ app.use("/",authController);
 /**Authentication protected route : only logged users can access */
 app.use('/api', payload_check);
 app.use('/api/client', clientRoutes);
+app.use('/api/stores', storeRoutes);
 /**Authorization protected route : only users with certain roles can access */
 app.use('/api/adminRoute', roleAuth.checkRole([AppRole.ADMIN, AppRole.CLIENT]), (req: Request, res: Response) => {
     res.status(200).json({message: 'Admin data'});

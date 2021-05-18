@@ -10,6 +10,7 @@ var payload_check = function (req, res, next) {
         res.status(400).json({ error: 'Token Not provided or expired' });
     }
     else {
+        console.log('Usuario autenticado');
         req.payload = payload;
         next();
     }

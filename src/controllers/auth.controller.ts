@@ -43,7 +43,11 @@ class authController{
                         const new_client = new Client();
                         new_client.profile = new_profile;
                         const cli = await ClientService.create(new_client)
+<<<<<<< HEAD
                         JWTService.setJwtInCookie({role:AppRole.CLIENT, profileId:cli.profile.id},res);
+=======
+                        JWTService.setJwtInCookie({role:AppRole.CLIENT, profileId: cli.profile.id}, res);
+>>>>>>> felipe
                         res.status(200).json({message: "user added succesfully", profile: new_profile})
                     }).catch((error) => {
                         res.status(500).json({error: "internal server error"})
