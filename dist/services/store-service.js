@@ -22,6 +22,9 @@ var StoreService = /** @class */ (function (_super) {
     function StoreService() {
         return _super.call(this, store_1.Store) || this;
     }
+    StoreService.prototype.getByName = function (storeName) {
+        return _super.prototype.getByConditions.call(this, { where: { name: storeName } });
+    };
     return StoreService;
 }(generic_service_1.GenericService));
 exports.default = new StoreService();
