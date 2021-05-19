@@ -70,30 +70,8 @@ var ClientController = /** @class */ (function () {
     };
     ClientController.prototype.deleteStore = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-<<<<<<< HEAD
             return __generator(this, function (_a) {
                 return [2 /*return*/];
-=======
-            var id, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        id = req.body.id.id;
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, client_service_1.default.deleteById(id)];
-                    case 2:
-                        _a.sent();
-                        return [3 /*break*/, 4];
-                    case 3:
-                        error_1 = _a.sent();
-                        return [2 /*return*/, res.status(404).json({ message: 'Store not found' })];
-                    case 4:
-                        res.status(201).json({ message: 'Store deleted' });
-                        return [2 /*return*/];
-                }
->>>>>>> felipe
             });
         });
     };

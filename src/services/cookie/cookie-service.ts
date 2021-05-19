@@ -10,6 +10,7 @@ class CookieService {
     getCookie(key: AppCookie, req: Request) {
         return req.cookies[key.valueOf()];
     }
+
 }
 
 export default new CookieService();

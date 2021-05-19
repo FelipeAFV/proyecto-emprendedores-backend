@@ -7,6 +7,8 @@ const router : Router = Router();
 
 
 router.get("/",authController.controllertest)
+router.get("/logout",authController.logout)
+router.get("/isLogged",authController.isLogged)
 router.post("/signIn", authController.signIn)
 router.post("/signUp",authController.signUp)
 router.post("/test",clientController.getFavoritesStores)

@@ -10,6 +10,8 @@ var client_controller_1 = __importDefault(require("../controllers/client.control
 var router = express_1.Router();
 exports.router = router;
 router.get("/", auth_controller_1.default.controllertest);
+router.get("/logout", auth_controller_1.default.logout);
+router.get("/isLogged", auth_controller_1.default.isLogged);
 router.post("/signIn", auth_controller_1.default.signIn);
 router.post("/signUp", auth_controller_1.default.signUp);
 router.post("/test", client_controller_1.default.getFavoritesStores);

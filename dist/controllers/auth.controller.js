@@ -47,6 +47,8 @@ var client_1 = require("../model/entity/client");
 var app_role_1 = require("../model/enums/app-role");
 var bcrypt_1 = __importDefault(require("bcrypt"));
 var jwt_service_1 = __importDefault(require("../services/token/jwt-service"));
+var app_cookies_1 = require("../model/enums/app-cookies");
+var jwt_service_2 = __importDefault(require("../services/token/jwt-service"));
 var authController = /** @class */ (function () {
     function authController() {
         var _this = this;
@@ -124,6 +126,23 @@ var authController = /** @class */ (function () {
                         res.status(200).json(userProfile);
                         return [2 /*return*/];
                 }
+            });
+        }); };
+        this.isLogged = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var validPayload;
+            return __generator(this, function (_a) {
+                validPayload = jwt_service_2.default.getJwtPayloadInCookie(req);
+                if (!validPayload)
+                    return [2 /*return*/, res.status(401).json({ message: 'User not logged' })];
+                res.status(200).json({ message: 'User logged' });
+                return [2 /*return*/];
+            });
+        }); };
+        this.logout = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                res.clearCookie(app_cookies_1.AppCookie.JWT);
+                res.status(200).json({ message: 'Logout from server' });
+                return [2 /*return*/];
             });
         }); };
     }
