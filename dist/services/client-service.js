@@ -15,13 +15,19 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ClientService = void 0;
 var client_1 = require("../model/entity/client");
 var generic_service_1 = require("./generic-service");
 var ClientService = /** @class */ (function (_super) {
     __extends(ClientService, _super);
     function ClientService() {
-        return _super.call(this, client_1.Client) || this;
+        var _this = _super.call(this, client_1.Client) || this;
+        _this.saveDefault = function (associatedProfile) {
+            return _super.prototype.create.call(_this, { id: 0, favorite_stores: [], profile: associatedProfile });
+        };
+        return _this;
     }
     return ClientService;
 }(generic_service_1.GenericService));
+exports.ClientService = ClientService;
 exports.default = new ClientService();

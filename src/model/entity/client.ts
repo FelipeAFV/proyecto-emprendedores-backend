@@ -1,9 +1,10 @@
+import { Person } from "../person";
 import { Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Profile } from "./profile";
 import {Store} from "./store"
 
 @Entity("client")
-export class Client {
+export class Client extends Person{
 
     @PrimaryGeneratedColumn({name: "client_id"})
     id: number;

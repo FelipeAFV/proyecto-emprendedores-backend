@@ -15,13 +15,19 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AdminService = void 0;
 var admin_1 = require("../model/entity/admin");
 var generic_service_1 = require("./generic-service");
 var AdminService = /** @class */ (function (_super) {
     __extends(AdminService, _super);
     function AdminService() {
-        return _super.call(this, admin_1.Admin) || this;
+        var _this = _super.call(this, admin_1.Admin) || this;
+        _this.saveDefault = function (associatedProfile) {
+            return _super.prototype.create.call(_this, { id: 0, profile: associatedProfile });
+        };
+        return _this;
     }
     return AdminService;
 }(generic_service_1.GenericService));
+exports.AdminService = AdminService;
 exports.default = new AdminService();
