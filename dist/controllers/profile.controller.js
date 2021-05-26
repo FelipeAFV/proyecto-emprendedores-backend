@@ -83,6 +83,27 @@ var ProfileControler = /** @class */ (function () {
             });
         });
     };
+    ProfileControler.prototype.hasProfile = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var profiletocheck, cookieinfo, foundprofile;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        profiletocheck = profile_utils_1.fromStringToAppRole(req.params.profile);
+                        if (!profiletocheck)
+                            return [2 /*return*/, res.status(400).json({ message: 'Error in request' })];
+                        cookieinfo = jwt_service_1.default.getJwtPayloadInCookie(req);
+                        return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { id: cookieinfo === null || cookieinfo === void 0 ? void 0 : cookieinfo.profileId, role: profiletocheck } })];
+                    case 1:
+                        foundprofile = _a.sent();
+                        if (!foundprofile)
+                            return [2 /*return*/, res.status(500).json({ message: 'Error no profile exists' })];
+                        res.status(200).json({ response: true });
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     return ProfileControler;
 }());
 exports.default = new ProfileControler();

@@ -7,4 +7,5 @@ var express_1 = require("express");
 var profile_controller_1 = __importDefault(require("../controllers/profile.controller"));
 var router = express_1.Router();
 router.route('/').post(profile_controller_1.default.createProfile);
+router.get('/hasProfile/:profile', profile_controller_1.default.hasProfile);
 exports.default = router;
