@@ -40,8 +40,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var app_cookies_1 = require("../model/enums/app-cookies");
+var app_role_1 = require("../model/enums/app-role");
 var profile_utils_1 = require("../utils/profile-utils");
 var profile_service_1 = __importDefault(require("../services/profile-service"));
+var storemanager_service_1 = __importDefault(require("../services/storemanager-service"));
+var admin_service_1 = __importDefault(require("../services/admin-service"));
 var jwt_service_1 = __importDefault(require("../services/token/jwt-service"));
 var ProfileControler = /** @class */ (function () {
     function ProfileControler() {
@@ -53,9 +56,11 @@ var ProfileControler = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, role = _a.role, email = _a.email, firstName = _a.firstName, lastName = _a.lastName;
-                        return [4 /*yield*/, profile_service_1.default.getById(req.payload.profileId)];
+                        return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { id: req.payload.profileId },
+                                relations: ['user'] })];
                     case 1:
                         currentProfile = _b.sent();
+                        console.log(currentProfile);
                         if (!currentProfile)
                             return [2 /*return*/, res.status(500).json({ message: 'Error in request prosessing' })];
                         appRoleToCreate = profile_utils_1.fromStringToAppRole(role);
@@ -64,6 +69,13 @@ var ProfileControler = /** @class */ (function () {
                         return [4 /*yield*/, profile_service_1.default.create({ id: 0, role: appRoleToCreate, email: email, firstName: firstName, lastName: lastName, user: currentProfile.user })];
                     case 2:
                         profileCreated = _b.sent();
+                        /**Se crea la entidad asociada al perfil */
+                        if (appRoleToCreate === app_role_1.AppRole.STORE_MANAGER) {
+                            storemanager_service_1.default.create({ id: 0, profile: profileCreated, stores: [] });
+                        }
+                        else if (appRoleToCreate === app_role_1.AppRole.ADMIN) {
+                            admin_service_1.default.create({ id: 0, profile: profileCreated });
+                        }
                         /**Se cambian datos en cookie para operar con el nuevo perfil */
                         res.clearCookie(app_cookies_1.AppCookie.JWT);
                         jwt_service_1.default.setJwtInCookie({ role: profileCreated.role, profileId: profileCreated.id }, res);

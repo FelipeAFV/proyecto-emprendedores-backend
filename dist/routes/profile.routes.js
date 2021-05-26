@@ -6,5 +6,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var profile_controller_1 = __importDefault(require("../controllers/profile.controller"));
 var router = express_1.Router();
-router.route('/').get(profile_controller_1.default.createProfile);
+router.route('/').post(profile_controller_1.default.createProfile);
 exports.default = router;
