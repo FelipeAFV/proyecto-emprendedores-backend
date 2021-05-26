@@ -30,7 +30,7 @@ class ClientController{
         }
     }
 
-    async deleteStore(req:Request,res:Response) {
+    async deleteFavoriteStore(req:Request,res:Response) {
         
     }
         

@@ -4,6 +4,6 @@ const router : Router = Router();
 
 router.get("/favoriteStores",clientController.getFavoritesStores);
 router.put('/')
-router.delete('/favoritesStores/:id', clientController.deleteStore);
+router.delete('/favoritesStores/:id', clientController.deleteFavoriteStore);
 
 export default router;

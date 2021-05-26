@@ -68,7 +68,7 @@ var ClientController = /** @class */ (function () {
             });
         });
     };
-    ClientController.prototype.deleteStore = function (req, res) {
+    ClientController.prototype.deleteFavoriteStore = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/];

@@ -8,5 +8,5 @@ var client_controller_1 = __importDefault(require("../controllers/client.control
 var router = express_1.Router();
 router.get("/favoriteStores", client_controller_1.default.getFavoritesStores);
 router.put('/');
-router.delete('/favoritesStores/:id', client_controller_1.default.deleteStore);
+router.delete('/favoritesStores/:id', client_controller_1.default.deleteFavoriteStore);
 exports.default = router;
