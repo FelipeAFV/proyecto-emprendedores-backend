@@ -15,13 +15,19 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StoreManagerService = void 0;
 var store_manager_1 = require("../model/entity/store-manager");
 var generic_service_1 = require("./generic-service");
 var StoreManagerService = /** @class */ (function (_super) {
     __extends(StoreManagerService, _super);
     function StoreManagerService() {
-        return _super.call(this, store_manager_1.StoreManager) || this;
+        var _this = _super.call(this, store_manager_1.StoreManager) || this;
+        _this.saveDefault = function (associatedProfile) {
+            return _super.prototype.create.call(_this, { id: 0, profile: associatedProfile, stores: [] });
+        };
+        return _this;
     }
     return StoreManagerService;
 }(generic_service_1.GenericService));
+exports.StoreManagerService = StoreManagerService;
 exports.default = new StoreManagerService();
