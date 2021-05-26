@@ -37,6 +37,15 @@ class ProfileControler {
         return res.status(200).json({message: 'Profile created successfully'});
     }
 
+    async hasProfile(req: Request, res: Response){
+        const profiletocheck: AppRole | undefined = fromStringToAppRole(req.params.profile);
+        if(!profiletocheck) return res.status(400).json({message: 'Error in request'});
+        const cookieinfo = jwtService.getJwtPayloadInCookie(req);
+        const foundprofile = await profileService.getByConditions({where:{id:cookieinfo?.profileId,role:profiletocheck}})
+        if(!foundprofile) return res.status(500).json({message: 'Error no profile exists'})
+        res.status(200).json({response:true})
+    }
+
 }
 
 export default new ProfileControler();
