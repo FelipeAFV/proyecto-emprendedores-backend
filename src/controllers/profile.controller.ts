@@ -9,6 +9,10 @@ import storeManagerService from "../services/storemanager-service";
 import adminService from "../services/admin-service";
 import jwtService from "../services/token/jwt-service";
 import { User } from "model/entity/user";
+import personserviceFactory from "../model/factory/personservice-factory";
+import { PersonService } from "../services/person-service";
+
+
 class ProfileControler { 
 
     async createProfile(req: Request, res: Response) {
@@ -22,15 +26,20 @@ class ProfileControler {
         /**Se comienza con el proceso de crear perfil */
         const appRoleToCreate: AppRole | undefined = fromStringToAppRole(role);
         if(!appRoleToCreate) return res.status(400).json({message: 'Error in request'});
-        const profileCreated = await profileService.create({id: 0 ,role: appRoleToCreate, email: email, firstName: firstName, lastName: lastName, user: currentProfile.user});
+        
+        const profileCreated: Profile = await profileService.create({id: 0 ,role: appRoleToCreate, email: email, firstName: firstName, lastName: lastName, user: currentProfile.user});
 
         /**Se crea la entidad asociada al perfil */
-        if (appRoleToCreate === AppRole.STORE_MANAGER) {
-            storeManagerService.create({id: 0, profile: profileCreated, stores: []});
+        const personService : PersonService = personserviceFactory.createPersonServiceFromRole(appRoleToCreate);
+        personService.saveDefault(profileCreated);
 
-        } else if (appRoleToCreate === AppRole.ADMIN) {
-            adminService.create({id: 0, profile: profileCreated});
-        }
+        // /**Se crea la entidad asociada al perfil */
+        // if (appRoleToCreate === AppRole.STORE_MANAGER) {
+        //     storeManagerService.create({id: 0, profile: profileCreated, stores: []});
+
+        // } else if (appRoleToCreate === AppRole.ADMIN) {
+        //     adminService.create({id: 0, profile: profileCreated});
+        // }
 
         /**Se cambian datos en cookie para operar con el nuevo perfil */
         res.clearCookie(AppCookie.JWT);

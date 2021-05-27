@@ -1,8 +1,9 @@
+import { Person } from "../person";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Profile } from "./profile";
 
 @Entity("admin")  
-export class Admin {
+export class Admin extends Person {
 
     @PrimaryGeneratedColumn({name: "admin_id"})
     id: number;
