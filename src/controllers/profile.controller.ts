@@ -8,8 +8,10 @@ import profileService from "../services/profile-service";
 import storeManagerService from "../services/storemanager-service";
 import adminService from "../services/admin-service";
 import jwtService from "../services/token/jwt-service";
+import { User } from "model/entity/user";
 import personserviceFactory from "../model/factory/personservice-factory";
 import { PersonService } from "../services/person-service";
+
 
 class ProfileControler { 
 
@@ -45,12 +47,36 @@ class ProfileControler {
         return res.status(200).json({message: 'Profile created successfully'});
     }
 
+    async changeProfile(req: Request, res: Response){
+        const requiredRole: AppRole | undefined = fromStringToAppRole(req.body.role); 
+        const currentProfile: Profile | undefined = await profileService.getByConditions({where: {id: req.payload.profileId},
+            relations: ['user']});
+        const currentUser : User | undefined = currentProfile?.user;
+        console.log(currentUser);
+        if (!currentProfile) return res.status(500).json({message: 'Error in request prosessing'});
+
+        const profileToChange = await profileService.getByConditions({where:{user:currentUser,role:requiredRole}})
+        if (!profileToChange) return res.status(500).json({message: 'Error no profile found that match conditions'});
+
+        res.clearCookie(AppCookie.JWT);
+        jwtService.setJwtInCookie({role: profileToChange.role, profileId: profileToChange.id }, res);
+        return res.status(200).json({message: 'Profile set successfully', profile: profileToChange});
+    }
+
     async hasProfile(req: Request, res: Response){
+        const currentProfile: Profile | undefined = await profileService.getByConditions({where: {id: req.payload.profileId},
+            relations: ['user']});
+        const currentUser : User | undefined = currentProfile?.user;
+        console.log(currentUser);
+        if (!currentProfile) return res.status(500).json({message: 'Error in request prosessing'});
+
+        // Se comienza la busqueda de algun perfil que cumpla los parametros
         const profiletocheck: AppRole | undefined = fromStringToAppRole(req.params.profile);
         if(!profiletocheck) return res.status(400).json({message: 'Error in request'});
-        const cookieinfo = jwtService.getJwtPayloadInCookie(req);
-        const foundprofile = await profileService.getByConditions({where:{id:cookieinfo?.profileId,role:profiletocheck}})
+        const foundprofile = await profileService.getByConditions({where:{user:currentUser,role:profiletocheck}})
         if(!foundprofile) return res.status(500).json({message: 'Error no profile exists'})
+
+        // Si se encuentra algun perfil que figure en la busqueda se devuelve boleano true y termina consulta
         res.status(200).json({response:true})
     }
 
