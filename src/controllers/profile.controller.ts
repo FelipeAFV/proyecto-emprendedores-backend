@@ -60,7 +60,7 @@ class ProfileControler {
 
         res.clearCookie(AppCookie.JWT);
         jwtService.setJwtInCookie({role: profileToChange.role, profileId: profileToChange.id }, res);
-        return res.status(200).json({message: 'Profile set successfully'});
+        return res.status(200).json({message: 'Profile set successfully', profile: profileToChange});
     }
 
     async hasProfile(req: Request, res: Response){
