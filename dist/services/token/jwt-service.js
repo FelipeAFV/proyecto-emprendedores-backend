@@ -6,12 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var app_cookies_1 = require("../../model/enums/app-cookies");
 var cookie_service_1 = __importDefault(require("../cookie/cookie-service"));
+var data_1 = __importDefault(require("../../controllers/data"));
 var JWTService = /** @class */ (function () {
     function JWTService() {
     }
     JWTService.prototype.generateToken = function (payload) {
         // TODO: Change secret key
-        return jsonwebtoken_1.default.sign(payload, 'secret', { expiresIn: '3h' });
+        return jsonwebtoken_1.default.sign(payload, data_1.default.TOKEN_SECRET, { expiresIn: '3h' });
     };
     JWTService.prototype.setJwtInCookie = function (payload, res) {
         var token = this.generateToken(payload);
@@ -22,7 +23,7 @@ var JWTService = /** @class */ (function () {
         if (!token)
             return undefined;
         try {
-            var userPayload = jsonwebtoken_1.default.verify(token, 'secret');
+            var userPayload = jsonwebtoken_1.default.verify(token, data_1.default.TOKEN_SECRET);
             console.log(userPayload);
             return userPayload;
         }
