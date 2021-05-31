@@ -1,5 +1,5 @@
 export enum AppCategories {
-    Clothes = 'Ropa',
+    CLOTHES = 'Ropa',
     HOME = 'Hogar',
     GENERAL = 'General',
     ELECTRONICS = 'Electronica',
