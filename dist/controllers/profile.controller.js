@@ -54,6 +54,7 @@ var ProfileControler = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, role = _a.role, email = _a.email, firstName = _a.firstName, lastName = _a.lastName;
+                        console.log(req.payload.profileId);
                         return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { id: req.payload.profileId },
                                 relations: ['user'] })];
                     case 1:
@@ -78,26 +79,62 @@ var ProfileControler = /** @class */ (function () {
                         /**Se cambian datos en cookie para operar con el nuevo perfil */
                         res.clearCookie(app_cookies_1.AppCookie.JWT);
                         jwt_service_1.default.setJwtInCookie({ role: profileCreated.role, profileId: profileCreated.id }, res);
-                        return [2 /*return*/, res.status(200).json({ message: 'Profile created successfully' })];
+                        return [2 /*return*/, res.status(200).json({ message: 'Profile created successfully', profile: profileCreated })];
+                }
+            });
+        });
+    };
+    ProfileControler.prototype.changeProfile = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var requiredRole, currentProfile, currentUser, profileToChange;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        requiredRole = profile_utils_1.fromStringToAppRole(req.body.role);
+                        return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { id: req.payload.profileId },
+                                relations: ['user'] })];
+                    case 1:
+                        currentProfile = _a.sent();
+                        currentUser = currentProfile === null || currentProfile === void 0 ? void 0 : currentProfile.user;
+                        console.log(currentUser);
+                        if (!currentProfile)
+                            return [2 /*return*/, res.status(500).json({ message: 'Error in request prosessing' })];
+                        return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { user: currentUser, role: requiredRole } })];
+                    case 2:
+                        profileToChange = _a.sent();
+                        if (!profileToChange)
+                            return [2 /*return*/, res.status(500).json({ message: 'Error no profile found that match conditions' })];
+                        res.clearCookie(app_cookies_1.AppCookie.JWT);
+                        jwt_service_1.default.setJwtInCookie({ role: profileToChange.role, profileId: profileToChange.id }, res);
+                        return [2 /*return*/, res.status(200).json({ message: 'Profile set successfully', profile: profileToChange })];
                 }
             });
         });
     };
     ProfileControler.prototype.hasProfile = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var profiletocheck, cookieinfo, foundprofile;
+            var currentProfile, currentUser, profiletocheck, foundprofile;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
+                    case 0: return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { id: req.payload.profileId },
+                            relations: ['user'] })];
+                    case 1:
+                        currentProfile = _a.sent();
+                        currentUser = currentProfile === null || currentProfile === void 0 ? void 0 : currentProfile.user;
+                        console.log(currentUser);
+                        if (!currentProfile)
+                            return [2 /*return*/, res.status(500).json({ message: 'Error in request prosessing' })];
                         profiletocheck = profile_utils_1.fromStringToAppRole(req.params.profile);
                         if (!profiletocheck)
                             return [2 /*return*/, res.status(400).json({ message: 'Error in request' })];
-                        cookieinfo = jwt_service_1.default.getJwtPayloadInCookie(req);
-                        return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { id: cookieinfo === null || cookieinfo === void 0 ? void 0 : cookieinfo.profileId, role: profiletocheck } })];
-                    case 1:
+                        return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { user: currentUser, role: profiletocheck } })];
+                    case 2:
                         foundprofile = _a.sent();
                         if (!foundprofile)
-                            return [2 /*return*/, res.status(500).json({ message: 'Error no profile exists' })];
+                            return [2 /*return*/, res.status(500).json({ message: 'Error no profile exists' })
+                                // Si se encuentra algun perfil que figure en la busqueda se devuelve boleano true y termina consulta
+                            ];
+                        // Si se encuentra algun perfil que figure en la busqueda se devuelve boleano true y termina consulta
                         res.status(200).json({ response: true });
                         return [2 /*return*/];
                 }

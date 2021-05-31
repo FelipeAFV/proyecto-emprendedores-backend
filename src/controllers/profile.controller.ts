@@ -18,6 +18,7 @@ class ProfileControler {
     async createProfile(req: Request, res: Response) {
 
         const {role, email, firstName, lastName} = req.body;
+        console.log(req.payload.profileId);
         const currentProfile: Profile | undefined = await profileService.getByConditions({where: {id: req.payload.profileId},
         relations: ['user']});
         console.log(currentProfile);
@@ -44,7 +45,7 @@ class ProfileControler {
         /**Se cambian datos en cookie para operar con el nuevo perfil */
         res.clearCookie(AppCookie.JWT);
         jwtService.setJwtInCookie({role: profileCreated.role, profileId: profileCreated.id }, res);
-        return res.status(200).json({message: 'Profile created successfully'});
+        return res.status(200).json({message: 'Profile created successfully', profile: profileCreated});
     }
 
     async changeProfile(req: Request, res: Response){

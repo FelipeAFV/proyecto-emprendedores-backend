@@ -24,7 +24,7 @@ class ClientController{
         const cookiedata = JWTService.getJwtPayloadInCookie(req);
         const client = await ClientService.getByConditions({where:{profile:cookiedata?.profileId},relations:['favorite_stores']})
         if(!client || client.favorite_stores.length === 0){
-            res.status(401).json({error:"no stores found"})
+            res.status(401).json({error:"no stores found for " + cookiedata?.role})
         }else{
             res.status(200).json(client.favorite_stores)
         }

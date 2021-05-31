@@ -58,7 +58,7 @@ var ClientController = /** @class */ (function () {
                     case 1:
                         client = _a.sent();
                         if (!client || client.favorite_stores.length === 0) {
-                            res.status(401).json({ error: "no stores found" });
+                            res.status(401).json({ error: "no stores found for " + (cookiedata === null || cookiedata === void 0 ? void 0 : cookiedata.role) });
                         }
                         else {
                             res.status(200).json(client.favorite_stores);
