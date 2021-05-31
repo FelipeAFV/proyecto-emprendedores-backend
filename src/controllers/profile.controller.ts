@@ -1,12 +1,9 @@
 import { Request, Response } from "express";
-import roleAuth from "middlewares/role-auth";
 import { Profile } from "../model/entity/profile";
 import { AppCookie } from "../model/enums/app-cookies";
 import { AppRole } from "../model/enums/app-role";
 import {fromStringToAppRole} from "../utils/profile-utils";
 import profileService from "../services/profile-service";
-import storeManagerService from "../services/storemanager-service";
-import adminService from "../services/admin-service";
 import jwtService from "../services/token/jwt-service";
 import { User } from "model/entity/user";
 import personserviceFactory from "../model/factory/personservice-factory";
@@ -52,11 +49,11 @@ class ProfileControler {
         const requiredRole: AppRole | undefined = fromStringToAppRole(req.body.role); 
         const currentProfile: Profile | undefined = await profileService.getByConditions({where: {id: req.payload.profileId},
             relations: ['user']});
-        const currentUser : User | undefined = currentProfile?.user;
-        console.log(currentUser);
         if (!currentProfile) return res.status(500).json({message: 'Error in request prosessing'});
+        const currentUser : User | undefined = currentProfile.user;
+        console.log(currentUser);
 
-        const profileToChange = await profileService.getByConditions({where:{user:currentUser,role:requiredRole}})
+        const profileToChange = await profileService.getByConditions({where:{user: currentUser,role: requiredRole}})
         if (!profileToChange) return res.status(500).json({message: 'Error no profile found that match conditions'});
 
         res.clearCookie(AppCookie.JWT);
@@ -67,14 +64,15 @@ class ProfileControler {
     async hasProfile(req: Request, res: Response){
         const currentProfile: Profile | undefined = await profileService.getByConditions({where: {id: req.payload.profileId},
             relations: ['user']});
-        const currentUser : User | undefined = currentProfile?.user;
-        console.log(currentUser);
         if (!currentProfile) return res.status(500).json({message: 'Error in request prosessing'});
 
+        const currentUser : User | undefined = currentProfile.user;
+        console.log(currentUser);
+
         // Se comienza la busqueda de algun perfil que cumpla los parametros
-        const profiletocheck: AppRole | undefined = fromStringToAppRole(req.params.profile);
-        if(!profiletocheck) return res.status(400).json({message: 'Error in request'});
-        const foundprofile = await profileService.getByConditions({where:{user:currentUser,role:profiletocheck}})
+        const roleInProfile: AppRole | undefined = fromStringToAppRole(req.params.profile);
+        if(!roleInProfile) return res.status(400).json({message: 'Error in request, no such profile in request'});
+        const foundprofile = await profileService.getByConditions({where:{user: currentUser, role: roleInProfile}})
         if(!foundprofile) return res.status(500).json({message: 'Error no profile exists'})
 
         // Si se encuentra algun perfil que figure en la busqueda se devuelve boleano true y termina consulta

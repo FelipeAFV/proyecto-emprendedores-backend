@@ -95,10 +95,10 @@ var ProfileControler = /** @class */ (function () {
                                 relations: ['user'] })];
                     case 1:
                         currentProfile = _a.sent();
-                        currentUser = currentProfile === null || currentProfile === void 0 ? void 0 : currentProfile.user;
-                        console.log(currentUser);
                         if (!currentProfile)
                             return [2 /*return*/, res.status(500).json({ message: 'Error in request prosessing' })];
+                        currentUser = currentProfile.user;
+                        console.log(currentUser);
                         return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { user: currentUser, role: requiredRole } })];
                     case 2:
                         profileToChange = _a.sent();
@@ -113,21 +113,21 @@ var ProfileControler = /** @class */ (function () {
     };
     ProfileControler.prototype.hasProfile = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var currentProfile, currentUser, profiletocheck, foundprofile;
+            var currentProfile, currentUser, roleInProfile, foundprofile;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { id: req.payload.profileId },
                             relations: ['user'] })];
                     case 1:
                         currentProfile = _a.sent();
-                        currentUser = currentProfile === null || currentProfile === void 0 ? void 0 : currentProfile.user;
-                        console.log(currentUser);
                         if (!currentProfile)
                             return [2 /*return*/, res.status(500).json({ message: 'Error in request prosessing' })];
-                        profiletocheck = profile_utils_1.fromStringToAppRole(req.params.profile);
-                        if (!profiletocheck)
-                            return [2 /*return*/, res.status(400).json({ message: 'Error in request' })];
-                        return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { user: currentUser, role: profiletocheck } })];
+                        currentUser = currentProfile.user;
+                        console.log(currentUser);
+                        roleInProfile = profile_utils_1.fromStringToAppRole(req.params.profile);
+                        if (!roleInProfile)
+                            return [2 /*return*/, res.status(400).json({ message: 'Error in request, no such profile in request' })];
+                        return [4 /*yield*/, profile_service_1.default.getByConditions({ where: { user: currentUser, role: roleInProfile } })];
                     case 2:
                         foundprofile = _a.sent();
                         if (!foundprofile)
