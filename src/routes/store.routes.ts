@@ -3,5 +3,6 @@ import storeController from "../controllers/store.controller";
 const router: Router = Router();
 
 router.get('/:storeName', storeController.getStoreByName);
+router.post('/', storeController.createStore);
 
 export default router;

@@ -1,5 +1,11 @@
-import { Request, Response, Router } from "express";
+import { json, Request, Response, Router } from "express";
+import { Store } from "model/entity/store";
+import { AppCategories } from "../model/enums/app-category";
+import { AppRole } from "../model/enums/app-role";
+import storemanagerService from "../services/storemanager-service";
+import jwtService from "../services/token/jwt-service";
 import storeService from "../services/store-service";
+import {fromStringToCategory} from "../utils/store-utils";
 
 
 class StoreController {
@@ -10,6 +16,26 @@ class StoreController {
         console.log(store);
         if (!store) return res.status(200).json({message: 'No store found'});
         res.status(200).json(store);
+    }
+
+    async createStore(req: Request, res: Response){
+        //Obtenemos informacion del request
+        const {storeName, storeDescription, Category} = req.body;
+        const parsedCaregory = fromStringToCategory(Category);
+
+         //Obtenemos informacion de la cookie
+        const cookieData = jwtService.getJwtPayloadInCookie(req);
+        if(cookieData?.role !== AppRole.STORE_MANAGER) return res.status(500).json({message:"User dont have permissions to create new stores"});
+
+        //Obtenemos el manager que esta haciendo la solicitud
+        const currentManager = await storemanagerService.getByConditions({where:{profile:cookieData?.profileId}})
+        if(!currentManager) return res.status(500).json({message: "no manager found"})
+
+        //Creamos la store y respondemos
+        const newStore = await storeService.create({id: 0, name: storeName, description: storeDescription, category: Category as AppCategories, managers: [currentManager]});
+
+        res.status(200).json({message:"store created succesfully"});
+
     }
 }
 
