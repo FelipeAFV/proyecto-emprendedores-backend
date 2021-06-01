@@ -27,6 +27,9 @@ var ClientService = /** @class */ (function (_super) {
         };
         return _this;
     }
+    ClientService.prototype.getPerson = function (currentProfile) {
+        return _super.prototype.getByConditions.call(this, { where: { profile: currentProfile } });
+    };
     return ClientService;
 }(generic_service_1.GenericService));
 exports.ClientService = ClientService;

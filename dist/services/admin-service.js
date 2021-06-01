@@ -27,6 +27,9 @@ var AdminService = /** @class */ (function (_super) {
         };
         return _this;
     }
+    AdminService.prototype.getPerson = function (currentProfile) {
+        return _super.prototype.getByConditions.call(this, { where: { profile: currentProfile } });
+    };
     return AdminService;
 }(generic_service_1.GenericService));
 exports.AdminService = AdminService;
