@@ -5,4 +5,5 @@ import { Person } from "model/person";
 export interface PersonService {
 
     saveDefault: (associatedProfile: Profile) => Promise<Person>;
+    getPerson: (currentProfile: Profile) => Promise<Person | undefined>;
 }

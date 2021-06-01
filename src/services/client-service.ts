@@ -10,6 +10,9 @@ export class ClientService extends GenericService<Client> implements PersonServi
     constructor() {
         super(Client);
     }
+    getPerson (currentProfile: Profile) {
+        return super.getByConditions({where: { profile: currentProfile }});
+    }
 
     saveDefault = (associatedProfile: Profile) : Promise<Client> => {
         return super.create({id: 0, favorite_stores: [], profile: associatedProfile});

@@ -16,6 +16,7 @@ import { Client } from "model/entity/client";
 import clientRoutes from './routes/client.route';
 import storeRoutes from "./routes/store.routes";
 import profileRoutes from "./routes/profile.routes";
+import authorizationRoutes from "./routes/authorization.routes";
 
 //global middleware
 /**Middleware for cors policy*/
@@ -42,6 +43,7 @@ app.use("/",authController);
 
 /**Authentication protected route : only logged users can access */
 app.use('/api', payload_check);
+app.use('/api/authorization', authorizationRoutes);
 app.use('/api/client', clientRoutes);
 app.use('/api/stores', storeRoutes);
 app.use('/api/profiles', profileRoutes );

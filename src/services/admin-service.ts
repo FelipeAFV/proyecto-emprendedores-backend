@@ -9,6 +9,10 @@ export class AdminService extends GenericService<Admin> implements PersonService
         super(Admin);
     }
 
+    getPerson (currentProfile: Profile) {
+        return super.getByConditions({where: { profile: currentProfile }});
+    }
+
     saveDefault = (associatedProfile: Profile) : Promise<Admin> => {
         return super.create({id: 0, profile: associatedProfile});
     }

@@ -10,6 +10,10 @@ export class StoreManagerService extends GenericService<StoreManager> implements
         super(StoreManager);
     }
 
+    getPerson (currentProfile: Profile) {
+        return super.getByConditions({where: { profile: currentProfile }, relations: ['stores']});
+    }
+
     saveDefault = (associatedProfile: Profile) : Promise<StoreManager> => {
         return super.create({id: 0, profile: associatedProfile, stores: []});
     }

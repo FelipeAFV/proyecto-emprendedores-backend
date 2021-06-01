@@ -27,6 +27,9 @@ var StoreManagerService = /** @class */ (function (_super) {
         };
         return _this;
     }
+    StoreManagerService.prototype.getPerson = function (currentProfile) {
+        return _super.prototype.getByConditions.call(this, { where: { profile: currentProfile }, relations: ['stores'] });
+    };
     return StoreManagerService;
 }(generic_service_1.GenericService));
 exports.StoreManagerService = StoreManagerService;
