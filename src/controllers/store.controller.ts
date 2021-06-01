@@ -23,6 +23,10 @@ class StoreController {
         const {storeName, storeDescription, Category} = req.body;
         const parsedCaregory = fromStringToCategory(Category);
 
+        //Se revisa si ya existe una tienda creada con el mismo nombre
+        const foundStore = await storeService.getByName(storeName);
+        if(foundStore) return res.status(500).json({message: "store name already in use"})
+
          //Obtenemos informacion de la cookie
         const cookieData = jwtService.getJwtPayloadInCookie(req);
         if(cookieData?.role !== AppRole.STORE_MANAGER) return res.status(500).json({message:"User dont have permissions to create new stores"});
