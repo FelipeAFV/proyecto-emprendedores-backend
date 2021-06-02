@@ -39,7 +39,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var app_role_1 = require("../model/enums/app-role");
+var storemanager_service_1 = __importDefault(require("../services/storemanager-service"));
+var jwt_service_1 = __importDefault(require("../services/token/jwt-service"));
 var store_service_1 = __importDefault(require("../services/store-service"));
+var store_utils_1 = require("../utils/store-utils");
 var StoreController = /** @class */ (function () {
     function StoreController() {
     }
@@ -57,6 +61,40 @@ var StoreController = /** @class */ (function () {
                         if (!store)
                             return [2 /*return*/, res.status(200).json({ message: 'No store found' })];
                         res.status(200).json(store);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    StoreController.prototype.createStore = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, name, description, category, parsedCaregory, foundStore, cookieData, currentManager, newStore;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, name = _a.name, description = _a.description, category = _a.category;
+                        parsedCaregory = store_utils_1.fromStringToCategory(category);
+                        return [4 /*yield*/, store_service_1.default.getByName(name)];
+                    case 1:
+                        foundStore = _b.sent();
+                        if (foundStore)
+                            return [2 /*return*/, res.status(500).json({ message: "store name already in use" })
+                                //Obtenemos informacion de la cookie
+                            ];
+                        cookieData = jwt_service_1.default.getJwtPayloadInCookie(req);
+                        if ((cookieData === null || cookieData === void 0 ? void 0 : cookieData.role) !== app_role_1.AppRole.STORE_MANAGER)
+                            return [2 /*return*/, res.status(500).json({ message: "User dont have permissions to create new stores" })];
+                        return [4 /*yield*/, storemanager_service_1.default.getByConditions({ where: { profile: cookieData === null || cookieData === void 0 ? void 0 : cookieData.profileId } })];
+                    case 2:
+                        currentManager = _b.sent();
+                        if (!currentManager)
+                            return [2 /*return*/, res.status(500).json({ message: "no manager found" })
+                                //Creamos la store y respondemos
+                            ];
+                        return [4 /*yield*/, store_service_1.default.create({ id: 0, name: name, description: description, category: category, managers: [currentManager] })];
+                    case 3:
+                        newStore = _b.sent();
+                        res.status(200).json({ message: "store created succesfully" });
                         return [2 /*return*/];
                 }
             });

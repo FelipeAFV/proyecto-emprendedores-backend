@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { StoreManager } from "./store-manager";
-import { AppCategories } from "../enums/app-category";
+import { StoreCategory } from "../enums/store-category";
 
 @Entity("store")
 export class Store {
@@ -16,10 +16,10 @@ export class Store {
 
     @Column({
         type: "enum",
-        enum: AppCategories,
-        default: AppCategories.GENERAL
+        enum: StoreCategory,
+        default: StoreCategory.GENERAL
     })
-    category: AppCategories;
+    category: StoreCategory;
 
     @ManyToMany( () => StoreManager, manager => manager.stores)
     managers: StoreManager[];

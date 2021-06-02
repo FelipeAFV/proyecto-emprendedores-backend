@@ -1,6 +1,6 @@
 import { json, Request, Response, Router } from "express";
 import { Store } from "model/entity/store";
-import { AppCategories } from "../model/enums/app-category";
+import { StoreCategory } from "../model/enums/store-category";
 import { AppRole } from "../model/enums/app-role";
 import storemanagerService from "../services/storemanager-service";
 import jwtService from "../services/token/jwt-service";
@@ -20,11 +20,11 @@ class StoreController {
 
     async createStore(req: Request, res: Response){
         //Obtenemos informacion del request
-        const {storeName, storeDescription, Category} = req.body;
-        const parsedCaregory = fromStringToCategory(Category);
+        const {name, description, category} = req.body;
+        const parsedCaregory = fromStringToCategory(category);
 
         //Se revisa si ya existe una tienda creada con el mismo nombre
-        const foundStore = await storeService.getByName(storeName);
+        const foundStore = await storeService.getByName(name);
         if(foundStore) return res.status(500).json({message: "store name already in use"})
 
          //Obtenemos informacion de la cookie
@@ -36,7 +36,7 @@ class StoreController {
         if(!currentManager) return res.status(500).json({message: "no manager found"})
 
         //Creamos la store y respondemos
-        const newStore = await storeService.create({id: 0, name: storeName, description: storeDescription, category: Category as AppCategories, managers: [currentManager]});
+        const newStore = await storeService.create({id: 0, name: name, description: description, category: category as StoreCategory , managers: [currentManager]});
 
         res.status(200).json({message:"store created succesfully"});
 

@@ -1,10 +1,10 @@
-import { AppCategories } from "../model/enums/app-category"
+import { StoreCategory } from "../model/enums/store-category"
 
-const fromStringToCategory =  (category: any): AppCategories | undefined => {
+const fromStringToCategory =  (category: any): StoreCategory | undefined => {
     if(!category) return undefined;
     let currentCategory: string = category;
     
-    return currentCategory as AppCategories;
+    return currentCategory as StoreCategory;
 
 }
  

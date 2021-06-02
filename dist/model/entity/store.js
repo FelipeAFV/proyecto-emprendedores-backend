@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Store = void 0;
 var typeorm_1 = require("typeorm");
 var store_manager_1 = require("./store-manager");
+var store_category_1 = require("../enums/store-category");
 var Store = /** @class */ (function () {
     function Store() {
     }
@@ -23,6 +24,18 @@ var Store = /** @class */ (function () {
         typeorm_1.Column({ name: "name" }),
         __metadata("design:type", String)
     ], Store.prototype, "name", void 0);
+    __decorate([
+        typeorm_1.Column({ name: "description" }),
+        __metadata("design:type", String)
+    ], Store.prototype, "description", void 0);
+    __decorate([
+        typeorm_1.Column({
+            type: "enum",
+            enum: store_category_1.StoreCategory,
+            default: store_category_1.StoreCategory.GENERAL
+        }),
+        __metadata("design:type", String)
+    ], Store.prototype, "category", void 0);
     __decorate([
         typeorm_1.ManyToMany(function () { return store_manager_1.StoreManager; }, function (manager) { return manager.stores; }),
         __metadata("design:type", Array)
