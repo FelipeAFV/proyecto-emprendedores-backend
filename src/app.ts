@@ -17,7 +17,7 @@ import clientRoutes from './routes/client.route';
 import storeRoutes from "./routes/store.routes";
 import profileRoutes from "./routes/profile.routes";
 import authorizationRoutes from "./routes/authorization.routes";
-
+import storeManagerRoutes from "./routes/storeManager.routes";
 //global middleware
 /**Middleware for cors policy*/
 app.use(cors({
@@ -47,6 +47,7 @@ app.use('/api/authorization', authorizationRoutes);
 app.use('/api/client', clientRoutes);
 app.use('/api/stores', storeRoutes);
 app.use('/api/profiles', profileRoutes );
+app.use('/api/storeManager', storeManagerRoutes );
 /**Authorization protected route : only users with certain roles can access */
 app.use('/api/adminRoute', roleAuth.checkRole([AppRole.ADMIN, AppRole.CLIENT]), (req: Request, res: Response) => {
     res.status(200).json({message: 'Admin data'});
