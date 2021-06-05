@@ -17,6 +17,10 @@ export class ClientService extends GenericService<Client> implements PersonServi
     saveDefault = (associatedProfile: Profile) : Promise<Client> => {
         return super.create({id: 0, favorite_stores: [], profile: associatedProfile});
     }
+
+    //deleteStore(store_id: number) {
+      //  return super.deleteById(store_id);
+    //}
     
 }
 

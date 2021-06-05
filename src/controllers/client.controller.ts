@@ -31,7 +31,9 @@ class ClientController{
     }
 
     async deleteFavoriteStore(req:Request,res:Response) {
-        
+        //const storeId: number = Number.parseInt(req.params.store_id);
+        //const affected = await ClientService.deleteStore(storeId);
+        //res.status(200).json({message: `Rows affected ${affected}`});
     }
         
 
