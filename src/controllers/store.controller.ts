@@ -36,7 +36,7 @@ class StoreController {
         if(!currentManager) return res.status(500).json({message: "no manager found"})
 
         //Creamos la store y respondemos
-        const newStore = await storeService.create({id: 0, name: name, description: description, category: category as StoreCategory , managers: [currentManager]});
+        const newStore = await storeService.create({id: 0, name: name, description: description, category: category as StoreCategory , managers: [currentManager], products:[]});
 
         res.status(200).json({message:"store created succesfully"});
 
