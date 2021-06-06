@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn, OneToMany, ManyToOne } from "typeorm";
 import { StoreManager } from "./store-manager";
 import { StoreCategory } from "../enums/store-category";
+import { Product} from "./product";
 
 @Entity("store")
 export class Store {
@@ -23,4 +24,7 @@ export class Store {
 
     @ManyToMany( () => StoreManager, manager => manager.stores)
     managers: StoreManager[];
+
+    @OneToMany(type=> Product, product => product.store)
+    products: Product[];
 }
